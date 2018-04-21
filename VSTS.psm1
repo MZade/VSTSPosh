@@ -227,6 +227,9 @@ function Get-VstsEndpointUri
     A hash table containing any additional query string
     parameters to add to the URI. These will be added with a '$'
     pre-pended to the query string name. E.g. '&$Top=10'.
+
+    .PARAMETER IgnoreProject
+    Indicates if the project ID needs to be used or ignored when launching the query.
 #>
 function Invoke-VstsEndpoint
 {
@@ -259,7 +262,10 @@ function Invoke-VstsEndpoint
         [String] $EndpointName,
 
         [Parameter()]
-        [Hashtable] $QueryStringExtParameters
+        [Hashtable] $QueryStringExtParameters,
+
+        [Parameter()] 
+        [Boolean] $IgnoreProject = $false
     )
 
     $queryString = [System.Web.HttpUtility]::ParseQueryString([string]::Empty)
@@ -284,7 +290,11 @@ function Invoke-VstsEndpoint
         }
     }
 
-    $queryString["api-version"] = $ApiVersion
+    if ([String]::IsNullOrEmpty($ApiVersion) -eq $false)
+    {
+        $queryString["api-version"] = $ApiVersion
+    }
+	
     $queryString = $queryString.ToString()
 
     $authorization = Get-VstsAuthorization -User $Session.User -Token $Session.Token
@@ -294,7 +304,7 @@ function Invoke-VstsEndpoint
     $uriBuilder = Get-VstsEndpointUri -Session $Session -EndpointName $EndpointName
     $uriBuilder.Query = $queryString
 
-    if ([String]::IsNullOrEmpty($Project))
+    if ($IgnoreProject -or [String]::IsNullOrEmpty($Project))
     {
         $uriBuilder.Path = ('{0}/_apis/{1}' -f $collection, $Path)
     }
