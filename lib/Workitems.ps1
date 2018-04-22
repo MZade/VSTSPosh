@@ -286,7 +286,7 @@ function Get-VstsWorkItemQuery
     .PARAMETER Id
     The Id of a single work item to lookup.
 
-    .PARAMETER $Tags
+    .PARAMETER Tags
     A semi column seperated string of the tag values that needs to be added to the given work item.
 
 #>
