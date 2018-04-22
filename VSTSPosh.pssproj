@@ -34,6 +34,7 @@
     <Compile Include="lib\Builds.ps1" />
     <Compile Include="lib\Changesets.ps1" />
     <Compile Include="lib\Code.ps1" />
+    <Compile Include="lib\Common.ps1" />
     <Compile Include="lib\Projects.ps1" />
     <Compile Include="lib\Releases.ps1" />
     <Compile Include="lib\Workitems.ps1" />

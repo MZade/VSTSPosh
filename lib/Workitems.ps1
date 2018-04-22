@@ -263,3 +263,90 @@ function Get-VstsWorkItemQuery
         }
     }
 }
+
+<#
+    .SYNOPSIS
+    Add a Tag to an existing work item in VSTS
+
+    .PARAMETER AccountName
+    The name of the VSTS account to use.
+
+    .PARAMETER User
+    This user name to authenticate to VSTS.
+
+    .PARAMETER Token
+    This personal access token to use to authenticate to VSTS.
+
+    .PARAMETER Session
+    The session object created by New-VstsSession.
+
+    .PARAMETER Project
+    The name of the project to get the policy configuration from.
+
+    .PARAMETER Id
+    The Id of a single work item to lookup.
+
+    .PARAMETER $Tags
+    A semi column seperated string of the tag values that needs to be added to the given work item.
+
+#>
+function Update-VstsWorkItemAddTags
+{
+    [CmdletBinding(DefaultParameterSetName = 'Account')]
+    param
+    (
+        [Parameter(Mandatory = $True, ParameterSetName = 'Account')]
+        [String] $AccountName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Account')]
+        [String] $User,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Account')]
+        [String] $Token,
+
+        [Parameter(Mandatory = $True, ParameterSetName = 'Session')]
+        $Session,
+
+        [Parameter(Mandatory = $True)]
+        [String] $Project,
+
+        [Parameter(Mandatory = $True)]
+        [String] $Id,
+
+        [Parameter(Mandatory = $True)]
+        [String] $Tags
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'Account')
+    {
+        $Session = New-VstsSession -AccountName $AccountName -User $User -Token $Token
+    }
+
+    $path = ('wit/workitems/{0}' -f $Id)
+
+    $operation =     
+        [PSCustomObject] @{
+            op    = 'add'
+            path  = '/fields/System.Tags' 
+            value = $Tags
+        }
+    
+
+    $body = $operation | ConvertTo-Json
+
+    if ($fields.Count -lt 2)
+    {
+        $body = ('[{0}]' -f $body)
+    }
+
+    $result = Invoke-VstsEndpoint `
+        -Session $Session `
+        -Project $Project `
+        -Path $path `
+        -Method 'PATCH' `
+        -Body $body `
+        -IgnoreProject $True `
+        -ApiVersion '4.1'
+
+    return $result.Value
+}
