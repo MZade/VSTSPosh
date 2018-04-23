@@ -80,4 +80,11 @@ Foreach($changeset in $changesets)
 $workItemsToReport = Get-Unique -InputObject $workItemsToReport
 $workItemsToReport
 
+Write-Host "-------------------------------------------------------------------"
+Write-Host ""
+Write-Host "Concatenated work item list to be used in the branch/merge check-in dialog:"
+$workItemsString = $workItemsToReport.Keys -join ","
+$workItemsString += "ADD_RELEASE_WORK_ITEM_HERE"
+Write-Host  $workItemsString
+
 pause 'Press any key to exit...';
