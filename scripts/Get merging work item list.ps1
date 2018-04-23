@@ -33,6 +33,13 @@ $global:Project = "PUT YOUR PROJECT NAME HERE"
 $AccountName = "PUT YOUR ACCOUNT NAME HERE"
 <# ............. #>
 
+<# ............. #>
+# PowerShell module
+#
+$VSTSModuleRoot = "C:\Scripts\VSTSPosh\VSTS.psm1" # This is the place where you place the VSTS.psm1 module downloaded from https://github.com/MZade/VSTSPosh
+Import-Module $VSTSModuleRoot -Force
+<# ............. #>
+
 <# PARAMETER INPUT - BEGIN #>
 $lastMergeDateStr = Read-Host -Prompt 'Input last merge date/time'
 $lastMergeDate = Get-Date $lastMergeDateStr 
