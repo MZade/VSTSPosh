@@ -41,6 +41,9 @@
     <Compile Include="LICENSE" />
     <Compile Include="ci\New-ModuleManifest.ps1" />
     <Compile Include="ci\Publish-Module.ps1" />
+    <Compile Include="scripts\Get all work items related to the changes sets of a given work item.ps1" />
+    <Compile Include="scripts\Get merged work item list From-To Datetime.ps1" />
+    <Compile Include="scripts\Get merging work item list.ps1" />
     <Compile Include="tests\Builds.tests.ps1" />
     <Compile Include="tests\Code.tests.ps1" />
     <Compile Include="tests\Projects.tests.ps1" />
@@ -56,6 +59,7 @@
   <ItemGroup>
     <Folder Include="lib\" />
     <Folder Include="ci\" />
+    <Folder Include="scripts\" />
     <Folder Include="tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
