@@ -289,6 +289,9 @@ function Get-VstsWorkItemQuery
     .PARAMETER Tags
     A semi column seperated string of the tag values that needs to be added to the given work item.
 
+    .PARAMETER Append
+    Determines if the script needs to Append the new tag without overwriting the existing one or overwrite the existing tags by adding this new tag.
+
 #>
 function Update-VstsWorkItemAddTags
 {
@@ -314,12 +317,26 @@ function Update-VstsWorkItemAddTags
         [String] $Id,
 
         [Parameter(Mandatory = $True)]
-        [String] $Tags
+        [String] $Tags,
+
+        [Parameter()]
+        [Boolean] $Append = $True
     )
 
     if ($PSCmdlet.ParameterSetName -eq 'Account')
     {
         $Session = New-VstsSession -AccountName $AccountName -User $User -Token $Token
+    }
+
+    $tagsToApply = $Tags
+
+    if($Append)
+    {
+        $workItemToTag = Get-VstsWorkItem -Session $session -ID $Id
+
+        $currentTags = $workItemToTag.fields.'System.Tags'
+
+        $tagsToApply = $tagsToApply + ';' + $currentTags
     }
 
     $path = ('wit/workitems/{0}' -f $Id)
@@ -328,7 +345,7 @@ function Update-VstsWorkItemAddTags
         [PSCustomObject] @{
             op    = 'add'
             path  = '/fields/System.Tags' 
-            value = $Tags
+            value = $tagsToApply
         }
     
 
